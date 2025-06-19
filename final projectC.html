@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>the code</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+        <div id="navBar">
+        <a class="navLink" href="final project.html">home</a>
+        <a class="navLink" href="final projectB.html">the process</a>
+        <a class="navLink" href="final projectC.html">the code</a> 
+    </div>
+    <div class="TitleA">
+        <h1>The <span id="FRII">Code</span></h1>
+        <img class="topImage" src="images/code.png" alt="code in arduino website"> 
+    </div>
+<div class="pageContent"> 
+    <p class="bodyText">Coding the fan was a relatively simple task in hindsight, nonetheless it was hard incorporating different principles from the Pushbutton, an LED, and the DC Motor into the Hand Fan. The following is the code.</p>
+<pre><code>
+const int BUTTON_PIN = 2;
+const int LED = 13;
+const int EN = 11;
+const int in1 = 10;
+const int in2 = 9;
+
+int ledState = 0; // Tracks if the LED and Motor are on or off 
+boolean isHeld = false; // Prevents holding down the pushbutton from spam toggling the led and motor
+
+void setup() {
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  pinMode(LED, OUTPUT);
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(EN, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int buttonValue = digitalRead(BUTTON_PIN);
+  Serial.println(buttonValue);
+
+  if (buttonValue == LOW && !isHeld) {
+    ledState = (ledState + 1) % 2;
+    isHeld = true; // Prevents spamming toggle if held
+  } else if (buttonValue == HIGH) {
+    isHeld = false;
+  }
+
+  if (ledState == 0) {
+    digitalWrite(LED, LOW); // Turn off LED
+    analogWrite(EN, 0); // Disable motor
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, LOW); //DC Motor function relies on ledstate
+  } else {
+    digitalWrite(LED, HIGH); // Turn on LED
+    analogWrite(EN, 255); // Full speed motor
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, HIGH);
+  }
+}
+</code></pre>
+</div>
+
+</body>
+</html>
